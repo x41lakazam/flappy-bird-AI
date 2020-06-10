@@ -123,9 +123,17 @@ bottom_pipe = Pipe(pipe_coords, _type="bottom")
 background = pygame.image.load('images/background.png')
 
 
+def is_dead(bird, top_pipe, bottom_pipe):
+    if pygame.sprite.collide_rect(bird, top_pipe):
+        return True
+    elif pygame.sprite.collide_rect(bird, bottom_pipe):
+        return True
+    if bird.pos[1] < 0 or bird.pos[1] > WINDOW_SIZE[1]:
+        return True
+    return False
 
-def flappy_bird_game():
-    pool = neat.Pool(POPULATION)
+
+def flappy_bird_game(pool):
     birds = [Bird() for _ in range(pool.population_nb)]
     dead_birds = 0
     points = 0
@@ -159,7 +167,7 @@ def flappy_bird_game():
 
             bird.draw(screen)
 
-            if pygame.sprite.collide_rect(bird, top_pipe) or pygame.sprite.collide_rect(bird, bottom_pipe):
+            if is_dead(bird, top_pipe, bottom_pipe):
                 organism.is_alive = 0
                 organism.fitness = points
                 dead_birds += 1
@@ -168,7 +176,13 @@ def flappy_bird_game():
 
         pygame.display.flip()
 
-flappy_bird_game()
+pool = neat.Pool(POPULATION)
+
+while True:
+
+    flappy_bird_game(pool)
+    time.sleep(0.5)
+    pool.new_gen()
 
 
      

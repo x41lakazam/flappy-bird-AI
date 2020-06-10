@@ -2,15 +2,20 @@ import numpy as np
 from config import *
 
 class Neuron:
-    def __init__(self, _id, _type):
+    def __init__(self, _type):
         self.type = _type
-        self.id = _id
 
         self.received_nb = 0
         self.reveived_val = 0
         self.input_conn = []
         self.output_conn = []
 
+    def disable(self):
+        for conn in self.input_conn:
+            conn.disable()
+        for conn in self.output_conn:
+            conn.disable()
+            
     def receive(self, val):
         self.reveived_val += val
         self.received_nb += 1
@@ -47,6 +52,9 @@ class Connection:
         self.weight = 0
         self.randomize_weight()
         self.connect_neurons()
+
+    def disable(self):
+        self.enable = False
 
     def connect_neurons(self):
         self.in_neuron.add_output_connection(self)
