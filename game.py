@@ -158,7 +158,6 @@ def flappy_bird_game(pool):
 
         inputs = [birds[0].pos[1], top_pipe.coords[0] ,top_pipe.coords[1], bottom_pipe.coords[1]]
         for bird, organism in zip(birds, pool.population):
-            print(bird.pos)
             if not organism.is_alive:
                 continue
 
@@ -171,19 +170,21 @@ def flappy_bird_game(pool):
                 organism.is_alive = 0
                 organism.fitness = points
                 dead_birds += 1
+                # print("bird position at death:", bird.pos)
                 if len(birds) == dead_birds:
                     return birds
-        
+            # else:
+            #     print(bird.pos)
 
         pygame.display.flip()
+
 
 pool = neat.Pool(POPULATION)
 
 while True:
-
     flappy_bird_game(pool)
-    time.sleep(0.5)
     pool.new_gen()
+    print(pool.gen)
 
 
      

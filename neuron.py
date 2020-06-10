@@ -21,7 +21,7 @@ class Neuron:
         self.received_nb += 1
 
     def sigmoid(self, x):
-        return 1.0 / (1.0 + np.exp(-x))
+        return 1.0 / (1.0 + np.exp(-x, dtype=np.float128))
 
     def output_value(self):
         return self.sigmoid(self.reveived_val)
