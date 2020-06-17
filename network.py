@@ -2,6 +2,8 @@ import random
 import numpy as np 
 from neuron import Connection, Neuron
 
+from overview import logger
+
 class Innovation:
     
     _innov_nb = 0
@@ -15,19 +17,40 @@ class Innovation:
 
 class Network:
     def __init__(self, topology):
-        self.topology = topology
+        self.initial_topology = topology
         self.conns = []
         self.layers = []
         
         self.init_neurons()
         self.init_connections()
 
+        logger.add_var("last_neuron_value")
+
+    def reset(self):
+        for l in self.layers:
+            for neuron in l:
+                neuron.reset()
+
+    @property
+    def topology(self):
+        return [len(layer) for layer in self.layers]
+
+    def print_infos(self):
+        print("-----------------------------")
+        print("Network info")
+        print("TOPOLOGY:", self.topology)
+        print("{} enabled neurons".format(sum([len([n for n in l if n.enabled]) for l in self.layers])))
+        print("{} enabled connections".format(len([c for c in self.conns if c.enabled])))
+        print("MEAN WEIGHT: {}".format(np.mean([c.weight for c in self.conns])))
+        logger.print_var_mean("last_neuron_value")
+        print("-----------------------------")
+
     def init_neurons(self):
-        for layer_ix, layer_size in enumerate(self.topology):
+        for layer_ix, layer_size in enumerate(self.initial_topology):
             layer = []
             if layer_ix == 0:
                 _type = 'input'
-            elif layer_ix == len(self.topology)-1:
+            elif layer_ix == len(self.initial_topology)-1:
                 _type = 'output'
             else:
                 _type = 'hidden'
@@ -36,13 +59,12 @@ class Network:
                 layer.append(neuron)
             self.layers.append(layer)
 
-
     def init_connections(self):
         for layer_ix, layer in enumerate(self.layers[:-1]):
             next_layer = self.layers[layer_ix + 1]
             for neuron in layer:
                 for next_neuron in next_layer:
-                    if np.random.uniform(0,1) <= 0.25:
+                    if np.random.uniform(0,1) <= 0.8:
                         conn = Connection(neuron, next_neuron, Innovation.innov_nb)
                         self.conns.append(conn)  
                         
@@ -60,8 +82,10 @@ class Network:
                 conn.disable() 
         
         innov_id = Innovation.innov_nb
+        self.layers.append(new_layer)
         self.conns.append(Connection(before_neuron, neuron, innov_id))
         self.conns.append(Connection(neuron, after_neuron, innov_id))
+
 
     def del_random_neuron(self):
         random_neuron = np.random.choice(np.random.choice(self.layers))
@@ -85,8 +109,18 @@ class Network:
     def del_random_connection(self):
         conn = np.random.choice(self.conns)
         conn.disable()
+    
+    def mutate_weights(self):
+        for conn in random.sample(self.enabled_conns, len(self.enabled_conns)):
+            conn.mutate_weight()
+
+
+    @property
+    def enabled_conns(self):
+        return [conn for conn in self.conns if conn.enabled]
 
     def forward_prop(self, inputs):
+
         for ix, neuron in enumerate(self.layers[0]):
 
             neuron.receive(inputs[ix])
@@ -94,9 +128,12 @@ class Network:
 
         for hidden in self.layers[1:-1]:
             for neuron in hidden:
-                neuron.fire()
+                v = neuron.fire()
 
-        return [neuron.output_value() for neuron in self.layers[-1]]
+
+        output_layer = [neuron.output_value() for neuron in self.layers[-1]]
+        logger.add_var_value("last_neuron_value", output_layer[0])
+        return output_layer
 
 
 

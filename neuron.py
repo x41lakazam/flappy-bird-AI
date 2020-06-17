@@ -6,31 +6,39 @@ class Neuron:
         self.type = _type
 
         self.received_nb = 0
-        self.reveived_val = 0
+        self.received_val = 0
         self.input_conn = []
         self.output_conn = []
+        self.enabled = True
+
+    def reset(self):
+        self.received_nb = 0
+        self.received_val = 0
 
     def disable(self):
         for conn in self.input_conn:
             conn.disable()
         for conn in self.output_conn:
             conn.disable()
+        self.enabled = False
             
     def receive(self, val):
-        self.reveived_val += val
+        self.received_val += val
         self.received_nb += 1
-
+        
     def sigmoid(self, x):
         return 1.0 / (1.0 + np.exp(-x, dtype=np.float128))
 
     def output_value(self):
-        return self.sigmoid(self.reveived_val)
+        return self.sigmoid(self.received_val)
 
     def fire(self):
+        rcv_value = None
         for conn in self.output_conn:
             if conn.enabled:
-                rcv_value = self.sigmoid(self.reveived_val) * conn.weight
+                rcv_value = self.output_value() * conn.weight
                 conn.out_neuron.receive(rcv_value)
+        return rcv_value
 
     def ready(self):
         return self.reveived_nb == len(self.input_conn)

@@ -3,10 +3,10 @@ import random
 import sys
 import time
 
+from overview import logger
 import neat
 from config import *
 # TODO: make it better
-
 
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
@@ -18,7 +18,8 @@ JUMP_STRENGTH = 5
 JUMP_LENGTH = 12
 WINDOW_SIZE = (400, 500)
 SHRINK_RECTS = .8
-SPEED = 1
+SPEED = 10
+BIRD_X = 100
 
 def convert_to_rect(sprite, pos):
     rect = sprite.get_rect()
@@ -40,6 +41,8 @@ class PipeCoords:
         self.x_speed = x_speed
         self.y_range = y_range
 
+        self.scored = False
+
     def get_pipes_coords(self):
         """
         IMPLICITLY INCREMENT THE X COORD
@@ -48,8 +51,12 @@ class PipeCoords:
         if self.x < -100:
             self.x = 400
             self.y = random.randint(-self.y_range, self.y_range)
+            self.scored = False
         return [(self.x, 300+ self.y + self.space // 2), (self.x, -300 + self.y - self.space // 2) ]
     
+    def score(self):
+        self.scored = True
+
     @property
     def bot_coords(self):
         return self.get_pipes_coords()[0]
@@ -60,6 +67,7 @@ class PipeCoords:
 
 
 class Pipe:
+
     def __init__(self, pipe_coords, _type="top"):
         self.pipe_coords = pipe_coords
         self.type = _type
@@ -67,6 +75,8 @@ class Pipe:
             self.sprite = pygame.image.load('images/top.png')
         else:
             self.sprite = pygame.image.load('images/bottom.png')
+        
+        self.scored = False 
     
     @property
     def coords(self):
@@ -84,11 +94,13 @@ class Pipe:
         return convert_to_rect(self.sprite, self.coords)
 
 class Bird:
+
     def __init__(self):
         self.sprite = pygame.image.load('images/bird1.png')
-        self.pos = [100,250]
+        self.pos = [BIRD_X,250]
         self.jumping = 0
-    
+
+
     @property
     def rect(self):
         rect =  convert_to_rect(self.sprite, self.pos)
@@ -107,57 +119,75 @@ class Bird:
         self.pos[1] += GRAVITY
     
     def jump(self):
+        if self.jumping != 0:
+            return False
         self.jumping = JUMP_LENGTH
 
     def __repr__(self):
-        return "<BIRD {}>".format(self.pos)
+        return "<BIRD {} ({},{})>".format(self.id, self.pos[0], self.pos[1])
         
 
 pygame.init() 
  
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
-pipe_coords = PipeCoords(20, x_speed=SPEED)
-top_pipe = Pipe(pipe_coords, _type="top")
-bottom_pipe = Pipe(pipe_coords, _type="bottom")
-background = pygame.image.load('images/background.png')
 
-
-def is_dead(bird, top_pipe, bottom_pipe):
+def collide_pipes(bird, top_pipe, bottom_pipe):
     if pygame.sprite.collide_rect(bird, top_pipe):
         return True
     elif pygame.sprite.collide_rect(bird, bottom_pipe):
         return True
-    if bird.pos[1] < 0 or bird.pos[1] > WINDOW_SIZE[1]:
+
+def collide_win(bird,):
+    if bird.pos[1] <= 0 or bird.pos[1] >= WINDOW_SIZE[1]:
         return True
     return False
 
 
 def flappy_bird_game(pool):
+    global SPEED
+
+    pipe_coords = PipeCoords(20, x_speed=SPEED)
+    top_pipe = Pipe(pipe_coords, _type="top")
+    bottom_pipe = Pipe(pipe_coords, _type="bottom")
+    background = pygame.image.load('images/background.png')
+
+    pool.reset()
     birds = [Bird() for _ in range(pool.population_nb)]
     dead_birds = 0
     points = 0
+
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
                 
-            # if event.type == pygame.KEYDOWN:
-            #     if event.key == pygame.K_SPACE:
-            #         bird.jump()
-            
+            if event.type == pygame.KEYDOWN:
+                # if event.key == pygame.K_SPACE:
+                #     bird.jump()
+                if event.key == pygame.K_MINUS:
+                    SPEED -= 0.5*SPEED
+                if event.key == pygame.K_PLUS:
+                    SPEED += 0.5*SPEED
+                if event.key == pygame.K_0:
+                    SPEED = 5
 
 
         screen.blit(background, (0,-100))
         bottom_pipe.draw(screen)
         top_pipe.draw(screen)
 
-        if top_pipe.coords[0] == birds[0].pos[0]:
-            points += 1
 
-        inputs = [birds[0].pos[1], top_pipe.coords[0] ,top_pipe.coords[1], bottom_pipe.coords[1]]
+        if top_pipe.coords[0] - pipe_coords.x_speed < BIRD_X < top_pipe.coords[0] + pipe_coords.x_speed:
+            points += 1
+        
         for bird, organism in zip(birds, pool.population):
+            inputs = [bird.jumping, bird.pos[1], top_pipe.coords[0] ,top_pipe.coords[1], bottom_pipe.coords[1]]
+
+            if len(birds) == dead_birds:
+                    return birds
+
             if not organism.is_alive:
                 continue
 
@@ -165,26 +195,27 @@ def flappy_bird_game(pool):
                 bird.jump()
 
             bird.draw(screen)
-
-            if is_dead(bird, top_pipe, bottom_pipe):
+        
+                
+            if collide_win(bird) or collide_pipes(bird, top_pipe, bottom_pipe):
                 organism.is_alive = 0
                 organism.fitness = points
                 dead_birds += 1
-                # print("bird position at death:", bird.pos)
-                if len(birds) == dead_birds:
-                    return birds
-            # else:
-            #     print(bird.pos)
+
 
         pygame.display.flip()
 
-
 pool = neat.Pool(POPULATION)
 
+gen = 0
 while True:
     flappy_bird_game(pool)
     pool.new_gen()
-    print(pool.gen)
+    
+    logger.print_infos(pool)
+    logger.print_infos(pool.population[0])
+    gen += 1
+
 
 
      
