@@ -2,8 +2,11 @@ import numpy as np
 from config import *
 
 class Neuron:
+    objs_n = 0
     def __init__(self, _type):
         self.type = _type
+        self.id = Neuron.objs_n
+        Neuron.objs_n += 1
 
         self.received_nb = 0
         self.received_val = 0
@@ -21,11 +24,11 @@ class Neuron:
         for conn in self.output_conn:
             conn.disable()
         self.enabled = False
-            
+
     def receive(self, val):
         self.received_val += val
         self.received_nb += 1
-        
+
     def sigmoid(self, x):
         return 1.0 / (1.0 + np.exp(-x, dtype=np.float128))
 
@@ -38,10 +41,16 @@ class Neuron:
             if conn.enabled:
                 rcv_value = self.output_value() * conn.weight
                 conn.out_neuron.receive(rcv_value)
+
+        if not self.ready():
+            for in_c in self.input_conn:
+                in_c.in_neuron.fire()
+
         return rcv_value
 
     def ready(self):
-        return self.reveived_nb == len(self.input_conn)
+        enabled_in_neurons_n = len([c for c in self.input_conn if c.in_neuron.enabled])
+        return self.received_nb == enabled_in_neurons_n
 
     def add_input_connection(self, conn):
         self.input_conn.append(conn)
@@ -71,10 +80,15 @@ class Connection:
     def mutate_weight(self):
         if np.random.uniform(0,1) <= WEIGHT_SMALL_MUTATION_PROB:
             if np.random.uniform(0,1) <= WEIGHT_BIG_MUTATION_PROB:
-                self.randomize_weight() 
+                self.randomize_weight()
             else:
-                self.weight += np.random.uniform(-0.1, 0.1)
-            
+                self.weight += np.random.uniform(-0.3, 0.3)
+
+        if self.weight > 1:
+            self.weight = 1
+        elif self.weight < 0:
+            self.weight = 0
+
     def randomize_weight(self):
         self.weight = np.random.uniform(0, 1)
 

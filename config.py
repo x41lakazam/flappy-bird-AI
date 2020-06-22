@@ -5,8 +5,8 @@ POPULATION = 50
 SURVIVORS = 10
 
 # Randomizing
-WEIGHT_SMALL_MUTATION_PROB = 0.3
-WEIGHT_BIG_MUTATION_PROB = 0.3
+WEIGHT_SMALL_MUTATION_PROB = 0.6
+WEIGHT_BIG_MUTATION_PROB = 0.25
 
 # Neural network
 INPUT_NEURONS = 5 # Bird.jumping / Bird.y / Pipes.x / TopPipe.y / BotPipe.y

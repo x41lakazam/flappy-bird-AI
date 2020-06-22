@@ -22,9 +22,11 @@ class Organism:
         self.network.print_infos()
 
     def decision(self, inputs):
-        
+
         out = self.network.forward_prop(inputs)
         logger.add_var_value("network_output", out)
+
+        self.network.reset()
 
         if out[0] >= FLAP_THRESHOLD:
             return 1
@@ -32,13 +34,13 @@ class Organism:
 
     def clone(self):
         return Organism(network=self.network)
-    
+
     def mutate(self):
         options = [
-            # self.network.add_random_neuron,
-            self.network.del_random_neuron,
-            # self.network.add_random_connection,
-            self.network.del_random_connection,
+            #self.network.add_random_neuron,
+            #self.network.del_random_neuron,
+            #self.network.add_random_connection,
+            #self.network.del_random_connection,
             self.network.mutate_weights,
         ]
 
@@ -55,7 +57,7 @@ class Organism:
         child.mutate()
         return child
 
-    
+
 
 
 

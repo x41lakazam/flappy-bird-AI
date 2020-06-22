@@ -1,0 +1,129 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_OUTPUT_FILESEP	slash	/slash or backslash/
+!_TAG_OUTPUT_MODE	u-ctags	/u-ctags or e-ctags/
+!_TAG_PROGRAM_AUTHOR	Universal Ctags Team	//
+!_TAG_PROGRAM_NAME	Universal Ctags	/Derived from Exuberant Ctags/
+!_TAG_PROGRAM_URL	https://ctags.io/	/official site/
+!_TAG_PROGRAM_VERSION	0.0.0	/a3c87ab5/
+BIRD_X	game.py	/^BIRD_X = 100$/;"	v
+BLACK	game.py	/^BLACK = (0, 0, 0)$/;"	v
+Bird	game.py	/^class Bird:$/;"	c
+Connection	neuron.py	/^class Connection:$/;"	c
+ConnectionRepresentation	net_repr.py	/^class ConnectionRepresentation:$/;"	c
+FLAP_THRESHOLD	config.py	/^FLAP_THRESHOLD = 1.0$/;"	v
+GRAVITY	game.py	/^GRAVITY = 10$/;"	v
+HEIGHT	game.py	/^HEIGHT = 70$/;"	v
+HIDDENS	config.py	/^HIDDENS = [3, 3, 3]$/;"	v
+INPUT_NEURONS	config.py	/^INPUT_NEURONS = 5 # Bird.jumping \/ Bird.y \/ Pipes.x \/ TopPipe.y \/ BotPipe.y$/;"	v
+Innovation	network.py	/^class Innovation:$/;"	c
+JUMP_LENGTH	game.py	/^JUMP_LENGTH = 12$/;"	v
+JUMP_STRENGTH	game.py	/^JUMP_STRENGTH = 5$/;"	v
+Logger	overview.py	/^class Logger():$/;"	c
+MARGIN	game.py	/^MARGIN = 5$/;"	v
+Network	network.py	/^class Network:$/;"	c
+NetworkRepresentation	net_repr.py	/^class NetworkRepresentation:$/;"	c
+Neuron	neuron.py	/^class Neuron:$/;"	c
+NeuronRepresentation	net_repr.py	/^class NeuronRepresentation:$/;"	c
+OUTPUT_NEURONS	config.py	/^OUTPUT_NEURONS = 1$/;"	v
+Organism	organism.py	/^class Organism:$/;"	c
+POPULATION	config.py	/^POPULATION = 50$/;"	v
+Pipe	game.py	/^class Pipe:$/;"	c
+PipeCoords	game.py	/^class PipeCoords:$/;"	c
+Pool	neat.py	/^class Pool:$/;"	c
+Rect	game.py	/^class Rect:$/;"	c
+SHRINK_RECTS	game.py	/^SHRINK_RECTS = .8$/;"	v
+SPEED	game.py	/^SPEED = 5$/;"	v
+SURVIVORS	config.py	/^SURVIVORS = 10$/;"	v
+TOPOLOGY	config.py	/^TOPOLOGY = [INPUT_NEURONS] + HIDDENS + [OUTPUT_NEURONS]$/;"	v
+WEIGHT_BIG_MUTATION_PROB	config.py	/^WEIGHT_BIG_MUTATION_PROB = 0.25$/;"	v
+WEIGHT_SMALL_MUTATION_PROB	config.py	/^WEIGHT_SMALL_MUTATION_PROB = 0.6$/;"	v
+WHITE	game.py	/^WHITE = (255, 255, 255)$/;"	v
+WIDTH	game.py	/^WIDTH = 70$/;"	v
+WINDOW_SIZE	game.py	/^WINDOW_SIZE = (400, 500)$/;"	v
+__init__	game.py	/^    def __init__(self):$/;"	m	class:Bird
+__init__	game.py	/^    def __init__(self, pipe_coords, _type="top"):$/;"	m	class:Pipe
+__init__	game.py	/^    def __init__(self, space, x_speed=5, y_range=100):$/;"	m	class:PipeCoords
+__init__	game.py	/^    def __init__(self, sprite, pos):$/;"	m	class:Rect
+__init__	neat.py	/^    def __init__(self, init_population_nb):$/;"	m	class:Pool
+__init__	net_repr.py	/^    def __init__(self, coords, size, color=(255,255,255)):$/;"	m	class:NeuronRepresentation
+__init__	net_repr.py	/^    def __init__(self, in_neuron, out_neuron, width=2, color=(255,255,255)):$/;"	m	class:ConnectionRepresentation
+__init__	net_repr.py	/^    def __init__(self, network, width, height):$/;"	m	class:NetworkRepresentation
+__init__	network.py	/^    def __init__(self, topology):$/;"	m	class:Network
+__init__	neuron.py	/^    def __init__(self, _type):$/;"	m	class:Neuron
+__init__	neuron.py	/^    def __init__(self, in_neuron, out_neuron, innov_id, enabled=True):$/;"	m	class:Connection
+__init__	organism.py	/^    def __init__(self, network=None):$/;"	m	class:Organism
+__init__	overview.py	/^    def __init__(self):$/;"	m	class:Logger
+__len__	neat.py	/^    def __len__(self):$/;"	m	class:Pool
+__repr__	game.py	/^    def __repr__(self):$/;"	m	class:Bird
+_innov_nb	network.py	/^    _innov_nb = 0$/;"	v	class:Innovation
+add_input_connection	neuron.py	/^    def add_input_connection(self, conn):$/;"	m	class:Neuron
+add_output_connection	neuron.py	/^    def add_output_connection(self, conn):$/;"	m	class:Neuron
+add_random_connection	network.py	/^    def add_random_connection(self):$/;"	m	class:Network
+add_random_neuron	network.py	/^    def add_random_neuron(self):$/;"	m	class:Network
+add_var	overview.py	/^    def add_var(self, name):$/;"	m	class:Logger
+add_var_value	overview.py	/^    def add_var_value(self, name, value):$/;"	m	class:Logger
+bot_coords	game.py	/^    def bot_coords(self):$/;"	m	class:PipeCoords
+clone	organism.py	/^    def clone(self):$/;"	m	class:Organism
+collide_pipes	game.py	/^def collide_pipes(bird, top_pipe, bottom_pipe):$/;"	f
+collide_win	game.py	/^def collide_win(bird,):$/;"	f
+connect_neurons	neuron.py	/^    def connect_neurons(self):$/;"	m	class:Connection
+convert_to_rect	game.py	/^def convert_to_rect(sprite, pos):$/;"	f
+coords	game.py	/^    def coords(self):$/;"	m	class:Pipe
+decision	organism.py	/^    def decision(self, inputs):$/;"	m	class:Organism
+del_random_connection	network.py	/^    def del_random_connection(self):$/;"	m	class:Network
+del_random_neuron	network.py	/^    def del_random_neuron(self):$/;"	m	class:Network
+disable	neuron.py	/^    def disable(self):$/;"	m	class:Connection
+disable	neuron.py	/^    def disable(self):$/;"	m	class:Neuron
+draw	game.py	/^    def draw(self, screen):$/;"	m	class:Bird
+draw	game.py	/^    def draw(self, screen):$/;"	m	class:Pipe
+draw	net_repr.py	/^    def draw(self):$/;"	m	class:NetworkRepresentation
+draw	net_repr.py	/^    def draw(self, surface):$/;"	m	class:ConnectionRepresentation
+draw	net_repr.py	/^    def draw(self, surface):$/;"	m	class:NeuronRepresentation
+enabled_conns	network.py	/^    def enabled_conns(self):$/;"	m	class:Network
+fire	neuron.py	/^    def fire(self):$/;"	m	class:Neuron
+flappy_bird_game	game.py	/^def flappy_bird_game(pool):$/;"	f
+forward_prop	network.py	/^    def forward_prop(self, inputs):$/;"	m	class:Network
+gen	game.py	/^gen = 0$/;"	v
+get_mutant_child	organism.py	/^    def get_mutant_child(self):$/;"	m	class:Organism
+get_pipes_coords	game.py	/^    def get_pipes_coords(self):$/;"	m	class:PipeCoords
+get_surface	net_repr.py	/^    def get_surface(self):$/;"	m	class:NetworkRepresentation
+init_connections	network.py	/^    def init_connections(self):$/;"	m	class:Network
+init_neurons	network.py	/^    def init_neurons(self):$/;"	m	class:Network
+init_organisms	neat.py	/^    def init_organisms(self):$/;"	m	class:Pool
+innov_nb	network.py	/^    def innov_nb(cls):$/;"	m	class:Innovation
+jump	game.py	/^    def jump(self):$/;"	m	class:Bird
+logger	overview.py	/^logger = Logger()/;"	v
+mutate	organism.py	/^    def mutate(self):$/;"	m	class:Organism
+mutate_weight	neuron.py	/^    def mutate_weight(self):$/;"	m	class:Connection
+mutate_weights	network.py	/^    def mutate_weights(self):$/;"	m	class:Network
+new_gen	neat.py	/^    def new_gen(self):$/;"	m	class:Pool
+np	neat.py	/^import numpy as np$/;"	I
+np	network.py	/^import numpy as np$/;"	I
+np	neuron.py	/^import numpy as np$/;"	I
+np	organism.py	/^import numpy as np$/;"	I
+np	overview.py	/^import numpy as np$/;"	I
+output_value	neuron.py	/^    def output_value(self):$/;"	m	class:Neuron
+pool	game.py	/^pool = neat.Pool(POPULATION)$/;"	v
+population_nb	neat.py	/^    def population_nb(self):$/;"	m	class:Pool
+print_infos	neat.py	/^    def print_infos(self):$/;"	m	class:Pool
+print_infos	network.py	/^    def print_infos(self):$/;"	m	class:Network
+print_infos	organism.py	/^    def print_infos(self):$/;"	m	class:Organism
+print_infos	overview.py	/^    def print_infos(self, obj):$/;"	m	class:Logger
+print_obj	overview.py	/^    def print_obj(self, msg, obj):$/;"	m	class:Logger
+print_var_mean	overview.py	/^    def print_var_mean(self, name):$/;"	m	class:Logger
+python.pythonPath	.vscode/settings.json	/^    "python.pythonPath": "\/usr\/bin\/python3"$/;"	s
+randomize_weight	neuron.py	/^    def randomize_weight(self):$/;"	m	class:Connection
+ready	neuron.py	/^    def ready(self):$/;"	m	class:Neuron
+receive	neuron.py	/^    def receive(self, val):$/;"	m	class:Neuron
+rect	game.py	/^    def rect(self):$/;"	m	class:Bird
+rect	game.py	/^    def rect(self):$/;"	m	class:Pipe
+reset	neat.py	/^    def reset(self):$/;"	m	class:Pool
+reset	network.py	/^    def reset(self):$/;"	m	class:Network
+reset	neuron.py	/^    def reset(self):$/;"	m	class:Neuron
+reset	organism.py	/^    def reset(self):$/;"	m	class:Organism
+score	game.py	/^    def score(self):$/;"	m	class:PipeCoords
+screen	game.py	/^screen = pygame.display.set_mode(WINDOW_SIZE)$/;"	v
+sigmoid	neuron.py	/^    def sigmoid(self, x):$/;"	m	class:Neuron
+top_coords	game.py	/^    def top_coords(self):$/;"	m	class:PipeCoords
+topology	network.py	/^    def topology(self):$/;"	m	class:Network

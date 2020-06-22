@@ -6,6 +6,7 @@ import time
 from overview import logger
 import neat
 from config import *
+from net_repr import NetworkRepresentation
 # TODO: make it better
 
 BLACK = (0, 0, 0)
@@ -18,13 +19,14 @@ JUMP_STRENGTH = 5
 JUMP_LENGTH = 12
 WINDOW_SIZE = (400, 500)
 SHRINK_RECTS = .8
-SPEED = 10
+SPEED = 60
 BIRD_X = 100
+NET_POS = (50, 50)
 
 def convert_to_rect(sprite, pos):
     rect = sprite.get_rect()
     rect.x = pos[0]
-    rect.y = pos[1] 
+    rect.y = pos[1]
 
     return rect
 
@@ -53,7 +55,7 @@ class PipeCoords:
             self.y = random.randint(-self.y_range, self.y_range)
             self.scored = False
         return [(self.x, 300+ self.y + self.space // 2), (self.x, -300 + self.y - self.space // 2) ]
-    
+
     def score(self):
         self.scored = True
 
@@ -75,9 +77,9 @@ class Pipe:
             self.sprite = pygame.image.load('images/top.png')
         else:
             self.sprite = pygame.image.load('images/bottom.png')
-        
-        self.scored = False 
-    
+
+        self.scored = False
+
     @property
     def coords(self):
         if self.type == "top":
@@ -117,7 +119,7 @@ class Bird:
 
         screen.blit(self.sprite, self.pos)
         self.pos[1] += GRAVITY
-    
+
     def jump(self):
         if self.jumping != 0:
             return False
@@ -125,12 +127,14 @@ class Bird:
 
     def __repr__(self):
         return "<BIRD {} ({},{})>".format(self.id, self.pos[0], self.pos[1])
-        
 
-pygame.init() 
- 
+
+pygame.init()
+
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
+font = pygame.font.Font('freesansbold.ttf', 32)
+
 
 def collide_pipes(bird, top_pipe, bottom_pipe):
     if pygame.sprite.collide_rect(bird, top_pipe):
@@ -157,12 +161,14 @@ def flappy_bird_game(pool):
     dead_birds = 0
     points = 0
 
+    net_repr = NetworkRepresentation(pool.population[0].network, 350, 100, scale=2, margin=5)
+
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-                
+
             if event.type == pygame.KEYDOWN:
                 # if event.key == pygame.K_SPACE:
                 #     bird.jump()
@@ -181,7 +187,7 @@ def flappy_bird_game(pool):
 
         if top_pipe.coords[0] - pipe_coords.x_speed < BIRD_X < top_pipe.coords[0] + pipe_coords.x_speed:
             points += 1
-        
+
         for bird, organism in zip(birds, pool.population):
             inputs = [bird.jumping, bird.pos[1], top_pipe.coords[0] ,top_pipe.coords[1], bottom_pipe.coords[1]]
 
@@ -195,13 +201,19 @@ def flappy_bird_game(pool):
                 bird.jump()
 
             bird.draw(screen)
-        
-                
+
+
             if collide_win(bird) or collide_pipes(bird, top_pipe, bottom_pipe):
                 organism.is_alive = 0
                 organism.fitness = points
                 dead_birds += 1
 
+        screen.blit(net_repr.get_surface(), NET_POS)
+
+        text = font.render(str(points), True, (0,0,0), (255,255,255))
+        screen.blit(text, (10,10))
+
+        time.sleep(1/SPEED)
 
         pygame.display.flip()
 
@@ -211,11 +223,11 @@ gen = 0
 while True:
     flappy_bird_game(pool)
     pool.new_gen()
-    
+
     logger.print_infos(pool)
     logger.print_infos(pool.population[0])
     gen += 1
 
 
 
-     
+

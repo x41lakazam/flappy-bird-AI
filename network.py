@@ -1,11 +1,11 @@
 import random
-import numpy as np 
+import numpy as np
 from neuron import Connection, Neuron
 
 from overview import logger
 
 class Innovation:
-    
+
     _innov_nb = 0
 
     @property
@@ -13,14 +13,14 @@ class Innovation:
     def innov_nb(cls):
         cls._innov_nb += 1
         return cls._innov_nb - 1
-    
+
 
 class Network:
     def __init__(self, topology):
         self.initial_topology = topology
         self.conns = []
         self.layers = []
-        
+
         self.init_neurons()
         self.init_connections()
 
@@ -64,10 +64,10 @@ class Network:
             next_layer = self.layers[layer_ix + 1]
             for neuron in layer:
                 for next_neuron in next_layer:
-                    if np.random.uniform(0,1) <= 0.8:
+                    if np.random.uniform(0,1) <= 0.4:
                         conn = Connection(neuron, next_neuron, Innovation.innov_nb)
-                        self.conns.append(conn)  
-                        
+                        self.conns.append(conn)
+
     def add_random_neuron(self):
         origin_ix = np.random.randint(1, len(self.layers)-1)
         neuron = Neuron('hidden')
@@ -79,8 +79,8 @@ class Network:
 
         for conn in before_neuron.output_conn:
             if after_neuron == conn.out_neuron:
-                conn.disable() 
-        
+                conn.disable()
+
         innov_id = Innovation.innov_nb
         self.layers.append(new_layer)
         self.conns.append(Connection(before_neuron, neuron, innov_id))
@@ -90,7 +90,7 @@ class Network:
     def del_random_neuron(self):
         random_neuron = np.random.choice(np.random.choice(self.layers))
         random_neuron.disable()
-    
+
     def add_random_connection(self):
         layer1_ix = np.random.randint(len(self.layers)-1)
         layer2_ix = np.random.randint(len(self.layers))
@@ -109,7 +109,7 @@ class Network:
     def del_random_connection(self):
         conn = np.random.choice(self.conns)
         conn.disable()
-    
+
     def mutate_weights(self):
         for conn in random.sample(self.enabled_conns, len(self.enabled_conns)):
             conn.mutate_weight()
@@ -139,4 +139,4 @@ class Network:
 
 
 
-            
+

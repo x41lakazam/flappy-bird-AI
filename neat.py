@@ -31,7 +31,7 @@ class Pool:
 
     def __len__(self):
         return len(self.population)
-        
+
     def init_organisms(self):
         for _ in range(self.init_population_nb):
             self.population.append(Organism())
@@ -41,7 +41,7 @@ class Pool:
 
         # Sort by fitness
         self.population.sort(key=lambda o: o.fitness)
-        
+
         best = self.population[-10:]
         new_pop = best + [c.get_mutant_child() for c in best]
 
@@ -50,6 +50,6 @@ class Pool:
     def reset(self):
         for org in self.population:
             org.reset()
-        
+
 
 
